@@ -13,7 +13,7 @@ The architecture follows the **Medallion pattern** , organizing data into three 
 ## ✨ Features & Highlights
 
 * Fully designed and developed in **MySQL**.
-* **Robust ELT stored procedures** automate data ingestion and transformations.
+* **Robust ETL stored procedures** automate data ingestion and transformations.
 * Optimized **indexing and foreign key constraints** ensure data integrity and query performance.
 * Use of advanced MySQL features like **generated columns**, transactions, and error handling.
 * Comprehensive **data quality validation** scripts.
@@ -22,6 +22,7 @@ The architecture follows the **Medallion pattern** , organizing data into three 
 ## 📁 Project Structure
 
 mysql-data-warehouse-project/
+│
 ├── datasets/                    # Sample CSV files for ingestion
 ├── docs/                        # Documentation and design notes
 ├── scripts/                     # SQL scripts for schema setup, ETL, and analytics
@@ -33,6 +34,7 @@ mysql-data-warehouse-project/
 ├── config/                      # Configuration files
 ├── README.md                    # Project overview and instructions
 └── .gitignore                   # Git ignore rules
+
 
 ## ⚙️ Getting Started
 
@@ -47,10 +49,6 @@ Prerequisites
 * Query the Gold layer views for direct business insights.
 * Schedule ELT stored procedures for automated pipeline runs.
 * Monitor data quality reports regularly to maintain accuracy.
-
-## 🛡️ License
-
-* This project is licensed under the MIT License. You are free to use, modify,       and share this project with proper attribution.
 
 ## ✉️ Contact
 
