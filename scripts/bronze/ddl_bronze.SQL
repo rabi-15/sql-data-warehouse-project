@@ -1,104 +1,122 @@
-/*
-===============================================================================
-DDL Script: Create Bronze Tables
-===============================================================================
-Script Purpose:
-    This script creates tables in the 'bronze' schema, dropping existing tables 
-    if they already exist.
-	  Run this script to re-define the DDL structure of 'bronze' Tables
-===============================================================================
-*/
--- ----------------------------------------------------------
--- Ensure you are targeting the correct database 
--- ----------------------------------------------------------
-USE DataWarehouse_Bronze;
+USE data_warehouse;
 
--- ----------------------------------------------------------
--- CRM customer Information (bronze_crm_cust_info)
--- ----------------------------------------------------------
-CREATE TABLE bronze_crm_cust_info (
-    cst_id                 INT,
-    cst_key                VARCHAR(50), -- Changed from NVARCHAR
-    cst_firstname          VARCHAR(50), -- Changed from NVARCHAR
-    cst_lastname           VARCHAR(50), -- Changed from NVARCHAR
-    cst_marital_status     VARCHAR(50), -- Changed from NVARCHAR
-    cst_gndr               VARCHAR(50), -- Changed from NVARCHAR
-    cst_create_date        DATE
-) 
-ENGINE=InnoDB 
-DEFAULT CHARSET=utf8mb4; -- Best practice for full Unicode support
+-- =============================================
+-- CRM SOURCE SYSTEM TABLES
+-- =============================================
 
+-- CRM Customer Info Table
+DROP TABLE IF EXISTS bronze_crm_customer_info;
+CREATE TABLE bronze_crm_customer_info (
+    ID INT NOT NULL,
+    customer_key VARCHAR(50) NOT NULL,
+    customer_name VARCHAR(100) NOT NULL,
+    customer_email VARCHAR(100),
+    customer_phone VARCHAR(20),
+    customer_address VARCHAR(255),
+    customer_city VARCHAR(50),
+    customer_state VARCHAR(50),
+    customer_country VARCHAR(50),
+    customer_zipcode VARCHAR(10),
+    created_date DATETIME,
+    PRIMARY KEY (ID),
+    INDEX idx_customer_key (customer_key)
+) ENGINE=InnoDB;
 
--- ----------------------------------------------------------
--- CRM Product Information (bronze_crm_prd_info)
--- ----------------------------------------------------------
-DROP TABLE IF EXISTS bronze_crm_prd_info; -- Safe drop for idempotency (optional but helpful)
-CREATE TABLE bronze_crm_prd_info (
-    prd_id         INT,
-    prd_key        VARCHAR(50), 
-    prd_nm         VARCHAR(50), 
-    prd_cost       INT,
-    prd_line       VARCHAR(50), 
-    prd_start_dt   DATETIME,
-    prd_end_dt     DATETIME
-) 
-ENGINE=InnoDB 
-DEFAULT CHARSET=utf8mb4;
+-- CRM Product Info Table  
+DROP TABLE IF EXISTS bronze_crm_product_info;
+CREATE TABLE bronze_crm_product_info (
+    ID INT NOT NULL,
+    product_key VARCHAR(50) NOT NULL,
+    product_name VARCHAR(100) NOT NULL,
+    product_category VARCHAR(50),
+    product_subcategory VARCHAR(50),
+    product_brand VARCHAR(50),
+    product_price DECIMAL(10,2),
+    product_cost DECIMAL(10,2),
+    created_date DATETIME,
+    PRIMARY KEY (ID),
+    INDEX idx_product_key (product_key)
+) ENGINE=InnoDB;
 
-
--- ----------------------------------------------------------
--- CRM Sales Details (bronze_crm_sales_details)
--- ----------------------------------------------------------
+-- CRM Sales Details Table
 DROP TABLE IF EXISTS bronze_crm_sales_details;
 CREATE TABLE bronze_crm_sales_details (
-    sls_ord_num    VARCHAR(50), 
-    sls_prd_key    VARCHAR(50), 
-    sls_cust_id    INT,
-    sls_order_dt   INT, -- Consider using DATE type here if storing YYYYMMDD
-    sls_ship_dt    INT, -- Consider using DATE type here if storing YYYYMMDD
-    sls_due_dt     INT, -- Consider using DATE type here if storing YYYYMMDD
-    sls_sales      INT, -- Recommend DECIMAL(10, 2) or similar for currency/sales
-    sls_quantity   INT,
-    sls_price      INT  -- Recommend DECIMAL(10, 2) or similar for currency/price
-) 
-ENGINE=InnoDB 
-DEFAULT CHARSET=utf8mb4;
+    ID INT NOT NULL,
+    order_id VARCHAR(50) NOT NULL,
+    customer_key VARCHAR(50) NOT NULL,
+    product_key VARCHAR(50) NOT NULL,
+    order_date DATE,
+    ship_date DATE,
+    quantity INT,
+    unit_price DECIMAL(10,2),
+    discount_amount DECIMAL(10,2),
+    sales_amount DECIMAL(10,2),
+    created_date DATETIME,
+    PRIMARY KEY (ID),
+    INDEX idx_order_id (order_id),
+    INDEX idx_customer_key (customer_key),
+    INDEX idx_product_key (product_key),
+    INDEX idx_order_date (order_date)
+) ENGINE=InnoDB;
 
+-- =============================================
+-- ERP SOURCE SYSTEM TABLES  
+-- =============================================
 
--- ----------------------------------------------------------
--- ERP Location Data (bronze_erp_loc_a101)
--- ----------------------------------------------------------
-DROP TABLE IF EXISTS bronze_erp_loc_a101;
-CREATE TABLE bronze_erp_loc_a101 (
-    cid            VARCHAR(50), 
-    cntry          VARCHAR(50) 
-) 
-ENGINE=InnoDB 
-DEFAULT CHARSET=utf8mb4;
+-- ERP Customer Info Table
+DROP TABLE IF EXISTS bronze_erp_customer_info;
+CREATE TABLE bronze_erp_customer_info (
+    ID INT NOT NULL,
+    customer_key VARCHAR(50) NOT NULL,
+    customer_name VARCHAR(100) NOT NULL,
+    customer_email VARCHAR(100),
+    customer_phone VARCHAR(20),
+    customer_address VARCHAR(255),
+    customer_city VARCHAR(50),
+    customer_state VARCHAR(50),
+    customer_country VARCHAR(50),
+    customer_zipcode VARCHAR(10),
+    created_date DATETIME,
+    PRIMARY KEY (ID),
+    INDEX idx_customer_key (customer_key)
+) ENGINE=InnoDB;
 
+-- ERP Product Info Table
+DROP TABLE IF EXISTS bronze_erp_product_info;
+CREATE TABLE bronze_erp_product_info (
+    ID INT NOT NULL,
+    product_key VARCHAR(50) NOT NULL,
+    product_name VARCHAR(100) NOT NULL,
+    product_category VARCHAR(50),
+    product_subcategory VARCHAR(50),
+    product_brand VARCHAR(50),
+    product_price DECIMAL(10,2),
+    product_cost DECIMAL(10,2),
+    created_date DATETIME,
+    PRIMARY KEY (ID),
+    INDEX idx_product_key (product_key)
+) ENGINE=InnoDB;
 
--- ----------------------------------------------------------
--- ERP Customer Data (bronze_erp_cust_az12)
--- ----------------------------------------------------------
-DROP TABLE IF EXISTS bronze_erp_cust_az12;
-CREATE TABLE bronze_erp_cust_az12 (
-    cid            VARCHAR(50), 
-    bdate          DATE,
-    gen            VARCHAR(50) 
-) 
-ENGINE=InnoDB 
-DEFAULT CHARSET=utf8mb4;
+-- ERP Sales Details Table
+DROP TABLE IF EXISTS bronze_erp_sales_details;
+CREATE TABLE bronze_erp_sales_details (
+    ID INT NOT NULL,
+    order_id VARCHAR(50) NOT NULL,
+    customer_key VARCHAR(50) NOT NULL,
+    product_key VARCHAR(50) NOT NULL,
+    order_date DATE,
+    ship_date DATE,
+    quantity INT,
+    unit_price DECIMAL(10,2),
+    discount_amount DECIMAL(10,2),
+    sales_amount DECIMAL(10,2),
+    created_date DATETIME,
+    PRIMARY KEY (ID),
+    INDEX idx_order_id (order_id),
+    INDEX idx_customer_key (customer_key),
+    INDEX idx_product_key (product_key),
+    INDEX idx_order_date (order_date)
+) ENGINE=InnoDB;
 
-
--- ----------------------------------------------------------
--- ERP Product Category (erp_px_cat_g1v2)
--- ----------------------------------------------------------
-DROP TABLE IF EXISTS bronze_erp_px_cat_g1v2;
-CREATE TABLE bronze_erp_px_cat_g1v2 (
-    id             VARCHAR(50), 
-    cat            VARCHAR(50), 
-    subcat         VARCHAR(50), 
-    maintenance    VARCHAR(50) 
-) 
-ENGINE=InnoDB 
-DEFAULT CHARSET=utf8mb4;
+-- Completion message
+SELECT 'Bronze layer tables created successfully!' AS Status;
