@@ -21,19 +21,19 @@ The architecture follows the **Medallion pattern** , organizing data into three 
 
 ## 📁 Project Structure
 
-mysql-data-warehouse-project/
-│
-├── datasets/                    # Sample CSV files for ingestion
-├── docs/                        # Documentation and design notes
-├── scripts/                     # SQL scripts for schema setup, ETL, and analytics
-│   ├── 00_setup/                # Database and schema creation scripts
-│   ├── bronze/                  # Bronze layer tables and load procedures
-│   ├── silver/                  # Silver layer tables and load procedures
-│   └── gold/                    # Gold layer analytical views and queries
-├── tests/                       # Data quality and validation scripts
-├── config/                      # Configuration files
-├── README.md                    # Project overview and instructions
-└── .gitignore                   # Git ignore rules
+- `mysql-data-warehouse-project/`
+  - `datasets/` — Sample CSV files for ingestion
+  - `docs/` — Documentation and design notes
+  - `scripts/` — SQL scripts for schema setup, ETL, and analytics
+    - `00_setup/` — Database and schema creation scripts
+    - `bronze/` — Bronze layer tables and load procedures
+    - `silver/` — Silver layer tables and load procedures
+    - `gold/` — Gold layer analytical views and queries
+  - `tests/` — Data quality and validation scripts
+  - `config/` — Configuration files
+  - `README.md` — Project overview and instructions
+  - `.gitignore` — Git ignore rules
+
 
 
 ## ⚙️ Getting Started
